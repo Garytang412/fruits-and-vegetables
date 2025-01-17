@@ -4,6 +4,11 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 import os
 
+# prevent DecompressionBombError during Dev.
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
+
+
 app = Flask(__name__)
 
 # Load the trained model
@@ -12,11 +17,12 @@ model = tf.keras.models.load_model(MODEL_PATH)
 
 
 # class labels
-CLASS_NAMES = ['apple','banana','beetroot','bell pepper',
-               'cabbage','capsicum','carrot','cauliflower',
-               'chilli pepper','corn','cucumber','eggplant','garlic','ginger','grapes','jalepeno',
-               'kiwi','lemon','lettuce','mango','onion','orange','paprika','pear','peas','pineapple','pomegranate','potato',
-               'raddish','soy beans','spinach','sweetcorn','steetpotato','tomato','turnip','watermelon']
+CLASS_NAMES = [
+                'apple','banana','beetroot','bell pepper',
+                'cabbage','capsicum','carrot','cauliflower',
+                'chilli pepper','corn','cucumber','eggplant','garlic','ginger','grapes','jalepeno',
+                'kiwi','lemon','lettuce','mango','onion','orange','paprika','pear','peas','pineapple','pomegranate','potato',
+                'raddish','soy beans','spinach','sweetcorn','steetpotato','tomato','turnip','watermelon']
 
 # preprocess the image
 def preprocess_image(image_path, target_size=(224, 224)):
