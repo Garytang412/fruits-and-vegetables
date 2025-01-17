@@ -2,6 +2,9 @@
 # WGU BSCS capstone
 # Student ID: 011851202
 
+"""
+This file is the training part of code.
+"""
 # step 1 packages and liberaries
 from silence_tensorflow import silence_tensorflow
 silence_tensorflow()
