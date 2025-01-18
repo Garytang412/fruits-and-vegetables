@@ -1,3 +1,8 @@
+# Author: Yachong Tang
+# WGU BSCS capstone
+# Student ID: 011851202
+'''
+This is the Flask web application'''
 from flask import Flask, request, render_template, url_for
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
