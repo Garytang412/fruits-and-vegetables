@@ -4,7 +4,7 @@ Author: Yachong Tang
 Student ID: 011851202  
 
 ## This project include Two parts:
-### 1 The training-model:
+### 1. The training-model:
 This part is used to train the model using the dataset. The tensorflow library used in this project has strict requirements for hardware and operating system, so this part of the code can **ONLY** run normally on Mac OS devices using Apple M-chips.  
     1. This part can **ONLY RUN** on a device with Mac OS and Apple M-chip.  
     2. To train the model, please download the zip of dataset from https://www.kaggle.com/datasets/kritikseth/fruit-and-vegetable-image-recognition . Unzip the the file. Make sure the train, validation, and test folders are under training-model/dataset/  
@@ -15,7 +15,7 @@ This part is used to train the model using the dataset. The tensorflow library u
     7. Run `python main.py` wait untill the training process to finish. It takes about 30 - 60 mins.  
     8. You will get some plots, and saved model 'MyModel.keras'  
 
-### 2 The web-application:
+### 2. The web-application:
 This part is the Web Application part. The website uses the trained model to make predictions on the images uploaded by users.  
 This part works for Mac OS, Windows, and Linux with python 3.9 and +.  
     1. Change directory to web-application `cd web-application`  
