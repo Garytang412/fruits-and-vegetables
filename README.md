@@ -21,8 +21,9 @@ This part works for Mac OS, Windows, and Linux with python 3.9 and +.
     1. Change directory to web-application `cd web-application`  
     2. If you installed requirements-macos-Mchip.txt from training-model, skip 3-5   
     3. Create virtual enviroment `python -m venv .venv-web`  
-    4. Activate virtual enviroment `source .venv-web/bin/activate`  
+    4. Activate virtual enviroment `source .venv-web/bin/activate` for terminal.    
+                    or `.\.venv-web\Scripts\activate.ps1` for windos Powershell.  
     5. Install libraries. `pip install -r requirements-web.txt`  
     6. Run `python app.py`  
-    7. Visite http://127.0.0.1:5000/ and start to use the application. (First time run the application may not fully load, please use control + c to stop the flask project and re-run `python app.py` ).  
+    7. Go to http://127.0.0.1:5000/ and start to use the application. (First time run the application may not fully load, please use control + c to stop the flask project and re-run `python app.py` ).  
     8. There are a few images under /test-images for user to try the application.
