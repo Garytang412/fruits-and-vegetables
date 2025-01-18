@@ -5,7 +5,7 @@
 """
 This file is the training part of code.
 """
-# step 1 packages and liberaries
+# packages and liberaries
 from silence_tensorflow import silence_tensorflow
 silence_tensorflow()
 import os
@@ -35,13 +35,13 @@ class LearningRateLogger(Callback):
 sns.set_style('darkgrid')
 warnings.filterwarnings('ignore')
 
-# step 2.1 dir:
+# dir:
 base_dir = './dataset'
 train_dir = os.path.join(base_dir, 'train')
 validation_dir = os.path.join(base_dir, 'validation')
 test_dir = os.path.join(base_dir, 'test')
 
-# step 2.2 count data and classes
+# count data and classes
 def num_of_classes(folder_dir, folder_name) :
     classes = [class_name for class_name in os.listdir(train_dir)]
     print(colored(f'number of classes in {folder_name} folder : {len(classes)}', 'blue', attrs=['bold']))
@@ -66,7 +66,7 @@ plt.xlabel('Labels', fontsize=15)
 plt.ylabel('Counts', fontsize=15)
 plt.yticks(np.arange(0, 105, 10))
 
-# step 2.3 convert data to a dataframe
+# convert data to a dataframe
 def create_df(folder_path) :
     all_images = []
     for class_name in classes :
@@ -81,11 +81,11 @@ print(colored(f'Number of samples in train : {len(train_df)}', 'blue', attrs=['b
 print(colored(f'Number of samples in validation : {len(validation_df)}', 'blue', attrs=['bold']))
 print(colored(f'Number of samples test : {len(test_df)}', 'blue', attrs=['bold']))
 
-# step 2.4 show an image per each class (label)
-# Create a DataFrame with one Label of each category
+# display an image per class (label)
+# create a DataFrame with one Label of each category
 df_unique = train_df.copy().drop_duplicates(subset=["label"]).reset_index()
 
-# Display some pictures of the dataset
+# display some pictures of the dataset
 fig, axes = plt.subplots(nrows=6, ncols=6, figsize=(8, 7),
                         subplot_kw={'xticks': [], 'yticks': []})
 
@@ -95,10 +95,10 @@ for i, ax in enumerate(axes.flat):
 plt.tight_layout(pad=0.5)
 plt.show()
 
-# step 2.5 Data generators
-# Train generator
+# data generators
+# train generator
 train_datagen = ImageDataGenerator(
-    rescale=1. / 255,  # Scaled images in range 0 to 1
+    rescale=1. / 255,  # Scaled images 
     rotation_range=20,  # Rorate images by factor 20 degree
     width_shift_range=0.2,  # Shift images horizontally by up to 20% of their width
     height_shift_range=0.2,  # Shift images vertically by up to 20% of their width
@@ -109,12 +109,12 @@ train_datagen = ImageDataGenerator(
 )
 train_generator = train_datagen.flow_from_dataframe(
     dataframe=train_df,  # Target data
-    x_col='file_path',  # X column
+    x_col='file_path',  # x column
     y_col='label',  # y column
-    target_size=(224, 224),  # Resize images  to
+    target_size=(224, 224),  # Resize images to 224 * 224
     color_mode='rgb',  # Color mode
     class_mode='categorical',  # type of model
-    batch_size=32,
+    batch_size=32, 
     shuffle=True,
     seed=42,
 )
@@ -130,7 +130,7 @@ validation_generator = validation_datagen.flow_from_dataframe(
     seed=42,
     shuffle=False
 )
-# Test generator
+# test generator
 test_datagen = ImageDataGenerator(rescale=1./255,)
 test_generator = test_datagen.flow_from_dataframe(
     dataframe=test_df,
@@ -143,7 +143,7 @@ test_generator = test_datagen.flow_from_dataframe(
     shuffle=False
 )
 
-# step 3.1 Add MobileNetV2 model
+# add MobileNetV2 model
 pre_trained_model = MobileNetV2(
     input_shape=(224, 224, 3),            # Input image size
     include_top=False,                    # model not include top layer
@@ -151,12 +151,12 @@ pre_trained_model = MobileNetV2(
     pooling='avg'                         # type of pooling layer
 )
 
-# step 3.2 Freeze model
-# Name of layers in MobileNetV2
+# freeze model
+# name of layers in MobileNetV2
 for layer in pre_trained_model.layers :
     print(layer.name)
-# Freeze all layers, except last layer
-# The goal is to train just last layer of pre trained model
+# freeze all layers, except last layer
+# the goal is just to train last layer of pre trained model
 pre_trained_model.trainable = True
 set_trainable = False
 for layer in pre_trained_model.layers :
@@ -167,8 +167,8 @@ for layer in pre_trained_model.layers :
     else :
         layer.trainable = False
 
-# step 3.3 Define a model
-# Add custom layers on top of the base model
+# define a model
+# add custom layers on top of the base model
 model = models.Sequential()
 model.add(pre_trained_model)
 model.add(layers.Flatten())
@@ -176,26 +176,26 @@ model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dense(128, activation='relu'))
 model.add(layers.Dense(36, activation='softmax'))
 
-# step 3.4 Model Diagram
+# model diagram
 plot_model(model, show_shapes=False, dpi=200)
 # Model Summary
 model.summary()
 
-# step 3.5 Compile Model
+# Compile Model
 model.compile(optimizer=optimizers.Adam(learning_rate=0.001),
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+            loss='categorical_crossentropy',
+            metrics=['accuracy'])
 
-# step 3.6 Callbacks
+# Callbacks
 # checkpoint
 checkpoint_cb=ModelCheckpoint("MyModel.keras",save_best_only=True)
 # early stoping
 earlystop_cb=EarlyStopping(patience=10, restore_best_weights=True)
 # ReduceLROnPlateau
 reduce_lr = ReduceLROnPlateau(monirot='val_loss',factor=0.5,patience=3,min_lr=1e-6)
-lr_logger = LearningRateLogger() # --
-'''
-# step 3.7 Train Model
+lr_logger = LearningRateLogger() # 
+
+# Train Model
 history = model.fit(
     train_generator,
     steps_per_epoch=len(train_generator),
@@ -205,10 +205,10 @@ history = model.fit(
     callbacks=[checkpoint_cb, earlystop_cb, reduce_lr,lr_logger] 
 )
 
-# step 3.8 Plot the result of training
+# Plot the result of training
 # Convert result of training to a dataframe
 result_df = pd.DataFrame(history.history)
-result_df['lr'] = history.history['lr'] # adding learning rate to dataframe
+result_df['lr'] = history.history['lr'] # add learning rate to dataframe
 result_df.tail()
 x = np.arange(len(result_df))
 fig, ax = plt.subplots(3, 1, figsize=(15, 12))
@@ -233,8 +233,7 @@ ax[2].legend()
 plt.sharex=True
 plt.show()
 
-'''
-# step 3.9 Evaluate the Model
+# Evaluate the Model
 # checkpoint callback, save base model weights in "MyModel.keras".
 # So, we should load it
 best_model = models.load_model('MyModel.keras')
@@ -274,10 +273,6 @@ def evaluate_model_performance(model, val_generator, class_labels):
     report = classification_report(true_labels, predicted_labels, target_names=class_labels)
     print(report)
     print('\n')
-
-    # Define a custom colormap
-    colors = ["white", "#102C42"]
-    # cmap_cm = LinearSegmentedColormap.from_list("cmap_cm", colors)
 
     # Confusion Matrix
     cm = confusion_matrix(true_labels, predicted_labels)
